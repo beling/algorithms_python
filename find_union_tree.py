@@ -22,11 +22,11 @@ class FindUnionTree:
     def root(self) -> 'FindUnionTree':
         """Return the root of self and compress the path from self to its root."""
         result = self
-        path = []
+        path = []   # path from self (included) to the root (excluded)
         while result.parent is not None:
             path.append(result)
             result = result.parent
-        for node in path:
+        for node in path:   # path compression
             node.parent = result
         return result
     
@@ -35,7 +35,7 @@ class FindUnionTree:
         return self.root is other.root
     
     def union(self, other: 'FindUnionTree') -> None:
-        """Merge the sets which includes self and other be joining the root of the shorter tree to the root of the taller tree.
+        """Merge the sets which includes self and other by joining the root of the shorter tree to the root of the taller tree.
         Compress the paths from self and other to their roots."""
         self_root = self.root
         other_root = other.root
