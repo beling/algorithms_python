@@ -7,7 +7,7 @@ class FindUnionTree:
     
     def __init__(self):
         """Construct one-element tree."""
-        self.parent = None
+        self.parent = None  # parent is None only for the root
         self.h = 0
         
     #@property
