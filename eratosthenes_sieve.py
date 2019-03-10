@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Piotr Beling, 2018
+# Piotr Beling, 2019
 
 def primes():
     """Generate prime numbers ad infinitum using Sieve of Eratosthenes algorithm."""
