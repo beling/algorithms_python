@@ -44,8 +44,10 @@ class FindUnionTree:
             other_root.parent = self_root
             if self_root.h == other_root.h:
                 self_root.h += 1
+            del other_root.h
         else:
             self_root.parent = other_root
+            del self_root.h
 
 
 if __name__ == "__main__":	# demo program:
