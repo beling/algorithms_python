@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+# Piotr Beling, 2023
+
 class ListBasedDict:
     """Dictionary that stores a list of key-value pairs and mimics the interface of the built-in dict type."""
         
