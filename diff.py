@@ -53,7 +53,7 @@ def diff(lcs):
     changes.reverse()
     return changes
 
-def print_diff(diffs, A, B):
+def print_files_diff(diffs, A, B):
     '''Print differences for the given list of differences
        and compared sequences which are the lists of strings.'''
     a, b = 0, 0
@@ -68,12 +68,12 @@ def print_diff(diffs, A, B):
             la, lb = A[a], B[b]
             print("\033[0m", end='')
             h = diff(lcs(la, lb))
-            print_diff_lines(h, la, lb)
+            print_lines_diff(h, la, lb)
             print()
             a += 1
             b += 1
             
-def print_diff_lines(diffs, A: str, B: str):
+def print_lines_diff(diffs, A: str, B: str):
     '''Print differences for the given list of differences
        and compared sequences which are the strings.'''
     a, b = 0, 0
@@ -130,4 +130,4 @@ else:
     sim = sim_accurate
 
 P = [[sim(a, b) for b in B] for a in A]
-print_diff(diff(lcs_for_sim_matrix(P)), A, B)
+print_files_diff(diff(lcs_for_sim_matrix(P)), A, B)
