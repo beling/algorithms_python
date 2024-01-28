@@ -8,15 +8,23 @@ from pyglet.window import key
 class HanoiWondow(pyglet.window.Window):
     
     def __init__(self):
-        super().__init__(resizable=True)
+        super().__init__(caption="Tower of Hanoi", resizable=True)
         self.reset_game(4)
 
     def reset_game(self, max_disk):
         self.max_disk = max_disk
         self.position = [d for d in range(self.max_disk, -1, -1)], [], []
         self.plan = [(self.max_disk, 0, 1)]
-        #clock.schedule_interval(lambda _: self.make_step(), 1)
+        self.auto_play_time = None
+        clock.schedule(self.auto_play)
         self.selected_rod = None
+
+    def auto_play(self, dt):
+        if self.auto_play_time is None: return
+        self.auto_play_time += dt
+        if self.auto_play_time > 1:
+            self.auto_play_time = 0
+            self.make_optimal_move()
         
     def make_move(self, src, dst):
         '''Move one disk from src to dst.'''
@@ -83,6 +91,7 @@ class HanoiWondow(pyglet.window.Window):
         if symbol in (key.ENTER, key.NUM_ENTER, key.SPACE): self.make_optimal_move()
         if symbol in (key.PLUS, key.NUM_ADD) and self.max_disk < 8: self.reset_game(self.max_disk+1)
         if symbol in (key.MINUS, key.NUM_SUBTRACT) and self.max_disk > 1: self.reset_game(self.max_disk-1)
+        if symbol == key.P: self.auto_play_time = 0 if self.auto_play_time is None else None
         
     def on_mouse_press(self, x, y, button, modifiers):
         if y > self.height-60:
