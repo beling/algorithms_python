@@ -9,24 +9,30 @@ class HanoiWondow(pyglet.window.Window):
     
     def __init__(self):
         super().__init__(resizable=True)
-        self.max_disk = 4
+        self.reset_game(4)
+
+    def reset_game(self, max_disk):
+        self.max_disk = max_disk
         self.position = [d for d in range(self.max_disk, -1, -1)], [], []
         self.plan = [(self.max_disk, 0, 1)]
         #clock.schedule_interval(lambda _: self.make_step(), 1)
         self.selected_rod = None
         
-    def make_move(self, a, b):
-        self.position[b].append(self.position[a].pop())
+    def make_move(self, src, dst):
+        '''Move one disk from src to dst.'''
+        self.position[dst].append(self.position[src].pop())
         
-    def push_to_plan(self, a, b):
-        self.plan.append((0, a, b))
+    def push_to_plan(self, src, dst):
+        '''Plan moving one disk from src to dst.'''
+        self.plan.append((0, src, dst))
         
     def make_user_move(self, src, dst):
-        step = self.step()  # optimal move
-        if step is None:    # if the game is already solved
+        '''Move one disk from src to dst and plan corrective moves.'''
+        optimal_move = self.optimal_move()  # optimal move
+        if optimal_move is None:    # if the game is already solved
             self.push_to_plan(dst, src) # unmaking the move solves it again
         else:
-            optim_src, optim_dst = step
+            optim_src, optim_dst = optimal_move
             if src == optim_src:    # disk to play is right
                 if dst != optim_dst:    # but the destination is wong
                     self.push_to_plan(dst, optim_dst) # move from wrong to right destination to fix
@@ -36,6 +42,7 @@ class HanoiWondow(pyglet.window.Window):
         self.make_move(src, dst)
         
     def select(self, rod):
+        '''Try to select the rod or try to make a move if another rod is already selected.'''
         if self.selected_rod is None:
             if self.position[rod]:
                 self.selected_rod = rod
@@ -48,34 +55,38 @@ class HanoiWondow(pyglet.window.Window):
                 self.make_user_move(self.selected_rod, rod)
                 self.selected_rod = None
         
-    def make_step(self):
+    def make_optimal_move(self):
+        '''Make optimal move is the game is not already solved.'''
         try:
-            a, b = self.step()
+            src, dst = self.optimal_move()
         except TypeError:
             pass
         else:
-            self.make_move(a, b)
+            self.make_move(src, dst)
         
-    def step(self):
+    def optimal_move(self):
+        '''Get optimal move or None if the game is already solved.'''
         if not self.plan: return None
-        n, a, b = self.plan.pop()
+        n, src, dst = self.plan.pop()
         while n > 0:
-            c = 3 - a - b
+            third = 3 - src - dst
             n -= 1
-            self.plan.append((n, c, b))
-            self.plan.append((0, a, b))
-            b = c
-        return a, b
+            self.plan.append((n, third, dst))
+            self.plan.append((0, src, dst))
+            dst = third
+        return src, dst
         
     def on_key_press(self, symbol, modifiers):
         if symbol == key._1: self.select(0)
         if symbol == key._2: self.select(1)
         if symbol == key._3: self.select(2)
-        if symbol in (key.ENTER, key.NUM_ENTER, key.SPACE): self.make_step()
+        if symbol in (key.ENTER, key.NUM_ENTER, key.SPACE): self.make_optimal_move()
+        if symbol in (key.PLUS, key.NUM_ADD) and self.max_disk < 8: self.reset_game(self.max_disk+1)
+        if symbol in (key.MINUS, key.NUM_SUBTRACT) and self.max_disk > 1: self.reset_game(self.max_disk-1)
         
     def on_mouse_press(self, x, y, button, modifiers):
         if y > self.height-60:
-            self.make_step()
+            self.make_optimal_move()
         else:
             self.select(x * 3 // self.width)
 
