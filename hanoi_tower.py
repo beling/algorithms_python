@@ -71,7 +71,7 @@ class HanoiWondow(pyglet.window.Window):
         if symbol == key._1: self.select(0)
         if symbol == key._2: self.select(1)
         if symbol == key._3: self.select(2)
-        if symbol == key.ENTER or symbol == key.SPACE: self.make_step()
+        if symbol in (key.ENTER, key.NUM_ENTER, key.SPACE): self.make_step()
         
     def on_mouse_press(self, x, y, button, modifiers):
         if y > self.height-60:
