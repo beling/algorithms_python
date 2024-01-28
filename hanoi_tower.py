@@ -20,6 +20,7 @@ class HanoiWondow(pyglet.window.Window):
         self.selected_rod = None
 
     def auto_play(self, dt):
+        '''Play optimal move each 1 second or do nothing if auto_play_time is None'''
         if self.auto_play_time is None: return
         self.auto_play_time += dt
         if self.auto_play_time > 1:
