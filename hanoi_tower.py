@@ -21,16 +21,19 @@ class HanoiWondow(pyglet.window.Window):
     def push_to_plan(self, a, b):
         self.plan.append((0, a, b))
         
-    def make_user_move(self, a, b):
-        step = self.step()
-        if step is None:
-            self.push_to_plan(b, a)
+    def make_user_move(self, src, dst):
+        step = self.step()  # optimal move
+        if step is None:    # if the game is already solved
+            self.push_to_plan(dst, src) # unmaking the move solves it again
         else:
-            optim_a, optim_b = step
-            if a != optim_a or b != optim_b:
-                self.push_to_plan(optim_a, optim_b)
-                self.push_to_plan(b, a)
-        self.make_move(a, b)
+            optim_src, optim_dst = step
+            if src == optim_src:    # disk to play is right
+                if dst != optim_dst:    # but the destination is wong
+                    self.push_to_plan(dst, optim_dst) # move from wrong to right destination to fix
+            else:   # disk to play is wrong, to fix:
+                self.push_to_plan(optim_src, optim_dst) # make correct move
+                self.push_to_plan(dst, src) # after unmake the wrong one
+        self.make_move(src, dst)
         
     def select(self, rod):
         if self.selected_rod is None:
@@ -68,7 +71,7 @@ class HanoiWondow(pyglet.window.Window):
         if symbol == key._1: self.select(0)
         if symbol == key._2: self.select(1)
         if symbol == key._3: self.select(2)
-        if symbol == key.ENTER: self.make_step()
+        if symbol == key.ENTER or symbol == key.SPACE: self.make_step()
         
     def on_mouse_press(self, x, y, button, modifiers):
         if y > self.height-60:
