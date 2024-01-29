@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 # Piotr Beling, 2024
 
-import pyglet
-from pyglet import shapes, clock
+from pyglet import shapes, clock, app, window, text
 from pyglet.window import key
 
 AUTO_PLAY_MOVE_TIME = 1 # in sec.
 
-class HanoiWindow(pyglet.window.Window):
+class HanoiWindow(window.Window):
     
     def __init__(self):
         super().__init__(caption="Tower of Hanoi", resizable=True)
@@ -112,7 +111,7 @@ class HanoiWindow(pyglet.window.Window):
         rod_width = self.width / 5
         rod_y = self.height / 5
         rod_height = 3 * self.height / 5
-        disk_height = rod_height/10
+        disk_height = rod_height / 10
         min_disk_width = rod_width / 2 
         disk_width_delta = rod_width * 9 / 10 - min_disk_width 
         
@@ -141,10 +140,10 @@ class HanoiWindow(pyglet.window.Window):
                                        0))
                 disk.anchor_x = disk_w/2
                 disk.draw()
-        pyglet.text.Label('Make optimal move (ENTER)',
-                          font_size=36,
-                          x=window.width//2, y=self.height-30,
-                          anchor_x='center', anchor_y='center').draw()
+        text.Label('Make optimal move (ENTER)',
+                    font_size=36,
+                    x=window.width//2, y=self.height-30,
+                    anchor_x='center', anchor_y='center').draw()
 
 window = HanoiWindow()
-pyglet.app.run()
+app.run()
