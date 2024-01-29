@@ -5,25 +5,28 @@ import pyglet
 from pyglet import shapes, clock
 from pyglet.window import key
 
-class HanoiWondow(pyglet.window.Window):
+AUTO_PLAY_MOVE_TIME = 1 # in sec.
+
+class HanoiWindow(pyglet.window.Window):
     
     def __init__(self):
         super().__init__(caption="Tower of Hanoi", resizable=True)
-        self.reset_game(4)
+        self.reset_game(2)
+        clock.schedule(self.auto_play)
 
     def reset_game(self, max_disk):
+        '''Set the game state to the initial position with the largest disk of the given size (counting from 0)'''
         self.max_disk = max_disk
         self.position = [d for d in range(self.max_disk, -1, -1)], [], []
         self.plan = [(self.max_disk, 0, 1)]
         self.auto_play_time = None
-        clock.schedule(self.auto_play)
         self.selected_rod = None
 
     def auto_play(self, dt):
         '''Play optimal move each 1 second or do nothing if auto_play_time is None'''
         if self.auto_play_time is None: return
         self.auto_play_time += dt
-        if self.auto_play_time > 1:
+        if self.auto_play_time > AUTO_PLAY_MOVE_TIME:
             self.auto_play_time = 0
             self.make_optimal_move()
         
@@ -55,6 +58,7 @@ class HanoiWondow(pyglet.window.Window):
         if self.selected_rod is None:
             if self.position[rod]:
                 self.selected_rod = rod
+                self.auto_play_time = None
         else:
             if self.selected_rod == rod:
                 self.selected_rod = None
@@ -89,10 +93,13 @@ class HanoiWondow(pyglet.window.Window):
         if symbol == key._1: self.select(0)
         if symbol == key._2: self.select(1)
         if symbol == key._3: self.select(2)
-        if symbol in (key.ENTER, key.NUM_ENTER, key.SPACE): self.make_optimal_move()
+        if symbol in (key.ENTER, key.NUM_ENTER):
+            self.make_optimal_move()
+            self.auto_play_time = None
+            self.selected_rod = None
         if symbol in (key.PLUS, key.NUM_ADD) and self.max_disk < 8: self.reset_game(self.max_disk+1)
         if symbol in (key.MINUS, key.NUM_SUBTRACT) and self.max_disk > 1: self.reset_game(self.max_disk-1)
-        if symbol == key.P: self.auto_play_time = 0 if self.auto_play_time is None else None
+        if symbol in (key.P, key.SPACE): self.auto_play_time = AUTO_PLAY_MOVE_TIME if self.auto_play_time is None else None
         
     def on_mouse_press(self, x, y, button, modifiers):
         if y > self.height-60:
@@ -139,5 +146,5 @@ class HanoiWondow(pyglet.window.Window):
                           x=window.width//2, y=self.height-30,
                           anchor_x='center', anchor_y='center').draw()
 
-window = HanoiWondow()
+window = HanoiWindow()
 pyglet.app.run()
