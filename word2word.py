@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+# Piotr Beling, 2024
+
 from array import array
 from sys import argv
 
