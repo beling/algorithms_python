@@ -7,7 +7,8 @@ The files include python implementation of some algorithms and data structures:
 - *hanoi_tower.py* solves [Tower of Hanoi](https://en.wikipedia.org/wiki/Tower_of_Hanoi) (using a recursive algorithm) and visualizes the solution (using [pyglet](https://pyglet.org/)),
 - *word2word.py* solves [Doublets (A Word Puzzle By Lewis Carroll)](https://lewiscarrollresources.net/doublets/index.html) using [BFS](https://en.wikipedia.org/wiki/Breadth-first_search),
 - *sort_complexity.py* - sorting by swapping with minimum and merge sort with time complexity plots + binary search,
-- *newton.py* - various methods for calculating [binomial coefficients](https://en.wikipedia.org/wiki/Binomial_coefficient).
+- *newton.py* - various methods for calculating [binomial coefficients](https://en.wikipedia.org/wiki/Binomial_coefficient),
+- *segment_tree_point_range_sum.py* and *segment_tree_point_range_sum_customizable.py* - [Segment Tree](https://en.wikipedia.org/wiki/Segment_tree) with single value updates and range queries
 
 # Bibliography/references
 [1] Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest and Clifford Stein *Introduction to Algorithms*
